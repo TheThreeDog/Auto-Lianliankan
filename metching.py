@@ -5,6 +5,7 @@ __Date__ = '2018/3/12 23:57'
 
 result = None
 
+
 def canConnect(x1,y1,x2,y2,r):
     '''
     :两个方块是否可以连通函数

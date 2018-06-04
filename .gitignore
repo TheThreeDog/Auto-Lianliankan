@@ -46,8 +46,8 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-
 # custome
 .idea/
 screen.png
-__pycache__
+__pycache__/
+
