@@ -65,6 +65,48 @@ def getAllSquare(screen_image,game_pos):
     #     new_all_square.append(s)
     # return new_all_square
 
+# 判断图像是否与已经在列表中的图像相同，如果是返回True
+def isImageExist(img,img_list):
+    for existed_img in img_list:
+        b = np.subtract(existed_img,img) # 图片数组进行比较，返回的是两个图片像素点差值的数组，
+        if not np.any(b):   # 如果全部是0，说明两图片完全相同。
+            return True
+        else:
+            continue
+    return False
+
+# 获取所有的方块类型
+def getAllSquareTypes(all_square):
+    print("将图像矩阵按类型归入类型列表...")
+    types = []
+    # 先把空白添加到数组中，作为0号
+    empty_img = cv2.imread('empty.png')
+    types.append(empty_img)
+    for square in all_square:
+        # 如果这个图像不存在的话将图像保存起来
+        if not isImageExist(square,types):
+            types.append(square)
+    return types
+
+# 将所有的方块与类型进行比较，转置成数字
+def getAllSquareRecord(all_square_list,types):
+    print("将所有的方块与类型进行比较，转置成数字矩阵...")
+    record = []  # 整个记录的二维数组
+    line = []   # 记录一行
+    for square in all_square_list:   # 把所有的方块和保存起来的所有类型做对比
+        num = 0
+        for type in types:    # 所有类型
+            res = cv2.subtract(square,type) # 作比较
+            if not np.any(res):     # 如果两个图片一样
+                line.append(num)    # 将类型的数字记录进这一行
+                break               # 并且跳出循环
+            num += 1                # 如果没有匹配上，则类型数加1
+
+        if len(line) == V_NUM:         # 如果校验完这一行已经有了11个数据，则另起一行
+            record.append(line)
+            line = []
+    return record
+
 
 if __name__ == '__main__':
     # 1、定位游戏窗体
@@ -74,7 +116,10 @@ if __name__ == '__main__':
     screen_image = getScreenImage()
     # 3、图像切片，把截图中的连连看切成一个一个的小方块，保存在一个数组中
     all_square_list = getAllSquare(screen_image,game_pos)
-
+    # 4、切片处理后的图片，相同的作为一种类型，放在数组中。
+    types = getAllSquareTypes(all_square_list)
+    # 5、将切片处理后的图片，转换成相对应的数字矩阵。注意 拿到的数组是横纵逆向的，转置一下。
+    result = np.transpose(getAllSquareRecord(all_square_list,types))
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
