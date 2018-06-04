@@ -105,6 +105,7 @@ def getAllSquareRecord(all_square_list,types):
         if len(line) == V_NUM:         # 如果校验完这一行已经有了11个数据，则另起一行
             record.append(line)
             line = []
+    print(record)
     return record
 
 # 自动消除
@@ -142,8 +143,10 @@ def autoRemove(squares,game_pos):
     # 每次消除一对儿，QQ的连连看最多105对儿
     game_x = game_pos[0] + MARGIN_LEFT
     game_y = game_pos[1] + MARGIN_HEIGHT
+    # 判断是否消除完了？如果没有的话，点击重列后继续消除
     for i in range(0,105):
         autoRelease(squares,game_x,game_y)
+
 
 if __name__ == '__main__':
     # 1、定位游戏窗体
