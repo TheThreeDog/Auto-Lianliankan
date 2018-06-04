@@ -107,6 +107,43 @@ def getAllSquareRecord(all_square_list,types):
             line = []
     return record
 
+# 自动消除
+def autoRelease(result,game_x,game_y):
+    for i in range(0,len(result)):
+        for j in range(0,len(result[0])):
+            # 以上两个for循环，定位第一个选中点
+            if result[i][j] != 0:
+                for m in range(0,len(result)):
+                    for n in range(0,len(result[0])):
+                        if result[m][n] != 0:
+                            # 后两个for循环定位第二个选中点
+                            if metching.canConnect(i,j,m,n,result):
+                            # 执行消除算法并返回
+                                result[i][j] = 0
+                                result[m][n] = 0
+                                print('可消除点：'+ str(i+1) + ',' + str(j+1) + '和' + str(m+1) + ',' + str(n+1))
+                                x1 = game_x + j*SQUARE_WIDTH
+                                y1 = game_y + i*SQUARE_HEIGHT
+                                x2 = game_x + n*SQUARE_WIDTH
+                                y2 = game_y + m*SQUARE_HEIGHT
+                                win32api.SetCursorPos((x1 + 15,y1 + 18))
+                                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x1+15, y1+18, 0, 0)
+                                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x1+15, y1+18, 0, 0)
+                                time.sleep(TIME_INTERVAL)
+
+                                win32api.SetCursorPos((x2 + 15, y2 + 18))
+                                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x2 + 15, y2 + 18, 0, 0)
+                                win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x2 + 15, y2 + 18, 0, 0)
+                                time.sleep(TIME_INTERVAL)
+                                return True
+    return False
+
+def autoRemove(squares,game_pos):
+    # 每次消除一对儿，QQ的连连看最多105对儿
+    game_x = game_pos[0] + MARGIN_LEFT
+    game_y = game_pos[1] + MARGIN_HEIGHT
+    for i in range(0,105):
+        autoRelease(squares,game_x,game_y)
 
 if __name__ == '__main__':
     # 1、定位游戏窗体
@@ -120,6 +157,9 @@ if __name__ == '__main__':
     types = getAllSquareTypes(all_square_list)
     # 5、将切片处理后的图片，转换成相对应的数字矩阵。注意 拿到的数组是横纵逆向的，转置一下。
     result = np.transpose(getAllSquareRecord(all_square_list,types))
+    # 6、执行自动消除
+    autoRemove(result,game_pos)
+    # 7、消除完成，释放资源。
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
