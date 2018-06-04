@@ -25,3 +25,9 @@
 
 ## 开源协议:
 - Apache Licence
+
+## 截图
+- 当然，在最后show几张图，展示下外挂的惊人效果，将时间间隔设置为0。
+![截图1](show/show_1.jpg)
+![截图2](show/show_2.jpg)
+![截图3](show/show_3.jpg)
