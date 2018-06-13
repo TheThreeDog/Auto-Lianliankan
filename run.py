@@ -8,7 +8,7 @@ https://www.lfd.uci.edu/~gohlke/pythonlibs/#pywin32
 选择版本：pywin32-223-cp35-cp35m-win_amd64.whl 
 '''
 
-import metching
+import matching
 import cv2
 import numpy as np
 import win32api
@@ -57,7 +57,8 @@ def getAllSquare(screen_image,game_pos):
             all_square.append(square)
     # 因为有些图片的边缘不一致造成干扰（主要是空白区域的切图），所以把每张小方块向内缩小一部分再
     # 对所有的方块进行处理屏蔽掉外边缘 然后返回
-    return list(map(lambda square : square[SUB_LT_Y:SUB_RB_Y,SUB_LT_X:SUB_RB_X],all_square))
+    # return list(map(lambda square : square[SUB_LT_Y:SUB_RB_Y,SUB_LT_X:SUB_RB_X],all_square))
+    return [square[SUB_LT_Y:SUB_RB_Y, SUB_LT_X:SUB_RB_X] for square in all_square]
     # 上面这行相当于下面这4行
     # new_all_square = []
     # for square in all_square:
@@ -118,7 +119,7 @@ def autoRelease(result,game_x,game_y):
                     for n in range(0,len(result[0])):
                         if result[m][n] != 0:
                             # 后两个for循环定位第二个选中点
-                            if metching.canConnect(i,j,m,n,result):
+                            if matching.canConnect(i,j,m,n,result):
                             # 执行消除算法并返回
                                 result[i][j] = 0
                                 result[m][n] = 0
